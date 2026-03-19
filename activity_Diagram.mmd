@@ -1,0 +1,25 @@
+stateDiagram-v2
+    [*] --> InitializeSystem: Systeem Start (Main)
+    InitializeSystem --> LoadData: Laad Recepten & User Sessie (Storage)
+    LoadData --> ShowHomepage: Toon Homepage (UI)
+
+    state ShowHomepage {
+        [*] --> DisplayHero: Toon Zoekbalk & Trending
+        DisplayHero --> WaitForInput: Wacht op Gebruikersactie
+    }
+
+    WaitForInput --> ExecuteSearch: Gebruiker voert zoekterm in
+    WaitForInput --> FilterCategory: Gebruiker klikt op Categorie (bijv. Vegan)
+    WaitForInput --> OpenRecipe: Gebruiker klikt op Receptkaart
+    WaitForInput --> CreateTrigger: Gebruiker klikt op [+] Create
+
+    ExecuteSearch --> ShowResults: Zoekfunctie uitvoeren (Search)
+    FilterCategory --> ShowResults: Filter toepassen (Search)
+    
+    ShowResults --> ShowHomepage: Terug naar overzicht
+    
+    OpenRecipe --> RecipeDetailView: Start Recipe Module
+    CreateTrigger --> CreateRecipeView: Start Create Module
+
+    RecipeDetailView --> ShowHomepage: Terug naar Home
+    CreateRecipeView --> ShowHomepage: Recept opgeslagen/geannuleerd

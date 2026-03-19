@@ -1,0 +1,35 @@
+graph TD
+    %% Inputs
+    Input([Gebruiker voert zoekcriteria in]) 
+    
+    subgraph Inputs [Variabele Types]
+        IN1[char searchQuery]
+        IN2[char filterTag]
+        IN3[int minRating]
+        IN4[char color]
+    end
+
+    Input --> IN1
+    Input --> IN2
+    Input --> IN3
+    Input --> IN4
+
+    %% Processing
+    IN1 & IN2 & IN3 & IN4 --> Proc{searchRecipe}
+    
+    Proc -->|Doorzoek Database| DB[(Storage Module)]
+    DB -->|Recepten Data| Filter[Filter Logica Toepassen]
+    
+    %% Decision
+    Filter --> Found{Resultaten gevonden?}
+    
+    %% Outputs
+    Found -->|Ja| Out1[struct Recipe results]
+    Found -->|Ja| Out2[int resultsCount]
+    Found -->|Nee| Out3[Melding: Geen resultaten gevonden]
+
+    %% Styling
+    style Input fill:#f9f,stroke:#333,stroke-width:2px
+    style Out1 fill:#bbf,stroke:#333,stroke-width:2px
+    style Out2 fill:#bbf,stroke:#333,stroke-width:2px
+    style Out3 fill:#ff9,stroke:#333,stroke-width:2px	

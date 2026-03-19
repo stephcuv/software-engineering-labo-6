@@ -1,0 +1,31 @@
+sequenceDiagram
+    participant Client as Client (Web Browser)
+    participant WebServer as Web Server (C-Logic)
+    participant DBServer as Database Server (Storage)
+
+    Note over Client, DBServer: Scenario A: Succesvolle zoekopdracht
+
+    Client->>WebServer: 1: GET /recipe/carbonara
+    activate WebServer
+    WebServer->>DBServer: 2: SQL SELECT (carbonara)
+    activate DBServer
+    DBServer-->>WebServer: 3: return Data Found
+    deactivate DBServer
+    WebServer-->>Client: 4: HTTP 200 OK (HTML Page)
+    deactivate WebServer
+
+    Note over Client, DBServer: Scenario B: Niet-succesvolle flow (Recept niet gevonden)
+
+    Client->>WebServer: 5: GET /recipe/onbekend-gerecht
+    activate WebServer
+    WebServer->>DBServer: 6: SQL SELECT (onbekend-gerecht)
+    activate DBServer
+    DBServer-->>WebServer: 7: return NULL / Empty Result
+    deactivate DBServer
+    
+    Note right of WebServer: Logic check: Data is leeg. <br/>Genereer foutmelding.
+    
+    WebServer-->>Client: 8: HTTP 404 Not Found (Error Page)
+    deactivate WebServer
+
+    Note over Client: Gebruiker ziet: "Oeps! Recept niet gevonden."

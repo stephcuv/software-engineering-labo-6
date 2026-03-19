@@ -1,0 +1,27 @@
+stateDiagram-v2
+    [*] --> GuestMode
+    
+    GuestMode --> Authenticating : Login / Signup
+    GuestMode --> ViewingRecipe : Select Recipe
+    ViewingRecipe --> GuestMode : Back
+    
+    Authenticating --> GuestMode : Auth Failed
+    Authenticating --> Authenticated : Auth Success
+    
+    state Authenticated {
+        [*] --> Dashboard
+        Dashboard --> Browsing : Search
+        Browsing --> ViewingRecipeAuth : Select Recipe
+        ViewingRecipeAuth --> Interaction : Like/Comment/Save
+        Interaction --> ViewingRecipeAuth : Server Ack
+        
+        Dashboard --> Editor : Create New Recipe
+        Editor --> Syncing : Save/Submit
+        Syncing --> Dashboard : Success (201 Created)
+        Syncing --> Editor : Error (Validation)
+        
+        Dashboard --> Profile : View My Recipes
+    }
+    
+    Authenticated --> GuestMode : Logout
+    Authenticated --> [*] : Close App

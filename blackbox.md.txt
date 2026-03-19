@@ -1,0 +1,60 @@
+µµµ# Black Box Specification: Filter Module
+
+## 1. Module Overview
+The **Filter Module** serves as the search engine for the application. It accepts user-defined criteria, communicates with the internal storage system, and returns filtered results, specific attributes (like color), or status messages.
+
+---
+
+## 2. Interface Definition
+
+### **Inputs (Parameters)**
+These variables are provided by the user to define the search scope:
+
+| Variable | Type | Description |
+| :--- | :--- | :--- |
+| `searchQuery` | `string` / `char*` | The specific text or keywords to search for. |
+| `filterTag` | `string` / `char*` | Category-based tags to narrow down results. |
+| `minRating` | `int` | The minimum star rating a recipe must have. |
+| `colorInput` | `string` / `char*` | The requested visual criteria (e.g., "Red", "Blue"). |
+
+### **Outputs (Results)**
+The module returns the following data based on the processing outcome:
+
+| Variable | Type | Condition | Description |
+| :--- | :--- | :--- | :--- |
+| `results` | `struct Recipe[]` | If Found | An array of all matching recipe data. |
+| `resultsCount` | `int` | Always | The total number of items found. |
+| **`color`** | **`string` / `char*`** | **If Found** | **The specific color value returned (e.g., "Blue", "Red").** |
+| `statusMessage` | `string` | If Not Found | Notification: "Geen resultaten gevonden." |
+
+---
+
+## 3. Black Box Functionality
+The internal **"SearchRecipe"** process is hidden from the user. It performs the following sequence:
+1. **Data Retrieval**: Fetches raw data from the `Storage Module`.
+2. **Filtering**: Applies the `minRating`, `filterTag`, and `colorInput` logic to the data.
+3. **Validation**: Determines if the resulting list is empty or populated.
+4. **Attribute Extraction**: Identifies the correct `color` string to return to the UI.
+5. **Dispatch**: Sends the structured data, count, and color string to the user interface.
+
+---
+
+## 4. Visual Representation
+```mermaid
+graph LR
+    subgraph Black_Box [Filter Module]
+        direction LR
+        P[searchRecipe Logic]
+    end
+
+    %% Inputs
+    I1[searchQuery] --> Black_Box
+    I2[filterTag] --> Black_Box
+    I3[minRating] --> Black_Box
+    I4[colorInput] --> Black_Box
+
+    %% Outputs
+    Black_Box --> O1[Recipe results]
+    Black_Box --> O2[resultsCount]
+    Black_Box --> O3[color: 'Blue/Red']
+    Black_Box --> O4[Status Message]
